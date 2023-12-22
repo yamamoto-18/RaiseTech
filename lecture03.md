@@ -70,7 +70,7 @@
 - `cd raisetech-live8-sample-app`でディレクトリの移動を行う
 - 「database.yml.sample」ファイルのコピーを下記コマンドで行う
    ```
-   cd config/database.yml.sample config/database.yml
+   cp config/database.yml.sample config/database.yml
    ```
    - 「config」フォルダ内の「database.yml.sample」ファイルが、「config」フォルダ内に「**database.yml**」というファイル名でコピーされる
    - **YML**とは
