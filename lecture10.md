@@ -96,24 +96,21 @@
 <br>
 
 - RDS
-  - 無料利用枠を使用するために行った設定
-    - Multi AZ
-      - 第5回授業課題の構成図ではマルチAZ構成にしているが、そもそも無料利用枠ではマルチAZ構成には出来ないため`false`に設定（構成図の作成ミス）
+  - Multi AZ
+    - 第5回授業課題の構成図ではマルチAZ構成にしているが、そもそも無料利用枠ではマルチAZ構成には出来ないため`false`に設定（構成図の作成ミス）
 
-    - Storage Type / Allocated Storage（ストレージタイプ / ストレージ割り当て）
-      - 最小値にて設定
-
-    - Storage Encrypted（暗号化）
-      - `t2.micro`では暗号化を使用できない
-
-    - Max Allocated Storage（ストレージの自動スケーリング）
-      - 数値を指定してしまうと有効になってしまうためそもそも記述をしない
+  - Storage Type / Allocated Storage（ストレージタイプ / ストレージ割り当て）
+    - 最小値にて設定
+  - Storage Encrypted（暗号化）
+    - `t2.micro`では暗号化を使用できない
+  - Max Allocated Storage（ストレージの自動スケーリング）
+    - 数値を指定してしまうと有効になってしまうためそもそも記述をしない
 
   - DB Name（最初のデータベース名）
-      - 第4回授業課題でRDSを作成した際、空欄のままにしていたため今回は設定しない
+    - 第4回授業課題でRDSを作成した際、空欄のままにしていたため今回は設定しない
 
   - Master User Name / Master User Password
-      - AWS Secrets Managerを活用することも考えたが、課題でRDSを作成した際は使用していないためNoEcho属性を`true`で指定
+    - AWS Secrets Managerを活用することも考えたが、課題でRDSを作成した際は使用していないためNoEcho属性を`true`で指定
   
   - 課題では環境を構築するだけのため、自動バックアップとスナップショットの作成はあえて無効化
   - UpdateReplacePolicy属性も`Delete`に設定
