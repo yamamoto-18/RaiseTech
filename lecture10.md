@@ -16,6 +16,8 @@
 - 課題開始当初、VPC・EC2・RDS…と個別にテンプレートの作成を行おうと思っていたが、スタックを細分化しすぎると他のスタックとの依存関係で修正がしにくくなるという記事を見つけ、最終的にNetwork Layer・Security Layer・Application Layerの3つに分けてテンプレートの作成をすることにした。
 - 第5回授業課題で作成した構成図を元に自動化する。
 
+<br>
+
 ![Alt text](images-lecture05/aws_diagram.png)
 
 <br>
@@ -95,16 +97,16 @@
 
 <br>
 
-- RDS（表にて記述）
+- RDS（箇条書きでは見にくいため表にて記述）
 
 | 項目 | 説明 |
 |:---|:---|
 | Multi AZ | 第5回授業課題の構成図ではマルチAZ構成にしているが、そもそも無料利用枠ではマルチAZ構成には出来ないため`false`に設定（構成図の作成ミス） |
-| Storage Type / Allocated Storage（ストレージタイプ / ストレージ割り当て） | 最小値にて設定 |
-| Storage Encrypted（暗号化） | `t2.micro`では暗号化を使用できない |
-| Max Allocated Storage（ストレージの自動スケーリング） | 数値を指定してしまうと有効になってしまうためそもそも記述をしない |
-| DB Name（最初のデータベース名） | 第4回授業課題でRDSを作成した際、空欄のままにしていたため今回は設定しない |
-| Master User Name / Master User Password | AWS Secrets Managerを活用することも考えたが、課題でRDSを作成した際は使用していないためNoEcho属性を`true`で指定 |
+| Storage Type / Allocated Storage<br>（ストレージタイプ / ストレージ割り当て） | 最小値にて設定 |
+| Storage Encrypted<br>（暗号化） | `t2.micro`では暗号化を使用できない |
+| Max Allocated Storage<br>（ストレージの自動スケーリング） | 数値を指定してしまうと有効になってしまうためそもそも記述をしない |
+| DB Name<br>（最初のデータベース名） | 第4回授業課題でRDSを作成した際、空欄のままにしていたため今回は設定しない |
+| Master User Password | AWS Secrets Managerを活用することも考えたが、課題でRDSを作成した際は使用していないためNoEcho属性を`true`で指定 |
 | その他 | 課題では環境を構築するだけのため、自動バックアップとスナップショットの作成はあえて無効化<br>UpdateReplacePolicy属性も`Delete`に設定 |
 
 <br>
