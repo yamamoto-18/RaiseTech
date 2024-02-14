@@ -32,7 +32,7 @@ Resources:
     Properties:
       GroupName: !Sub ${NameBase}-ec2-sg
       GroupDescription: Security Group For EC2.
-      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc" }
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
       SecurityGroupIngress:
         # HTTP
         - IpProtocol: tcp
@@ -64,7 +64,7 @@ Resources:
     Properties:
       GroupName: !Sub ${NameBase}-rds-sg
       GroupDescription: Security Group For RDS.
-      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc" }
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
       SecurityGroupIngress:
         # MYSQL/Aurora
         - IpProtocol: tcp
@@ -81,7 +81,7 @@ Resources:
     Properties:
       GroupName: !Sub ${NameBase}-alb-sg
       GroupDescription: Security Group For ALB.
-      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc" }
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
       SecurityGroupIngress:
         # HTTP
         - IpProtocol: tcp

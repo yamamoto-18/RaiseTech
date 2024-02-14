@@ -180,7 +180,7 @@ Outputs:
   VPC:
     Value: !Ref VPC
     Export:
-      Name: !Sub ${NameBase}-vpc
+      Name: !Sub ${NameBase}-vpc-id
 
 # Subnet
   PublicSubnet1:

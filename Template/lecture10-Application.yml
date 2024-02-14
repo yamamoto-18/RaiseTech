@@ -103,7 +103,7 @@ Resources:
       Name: !Sub ${NameBase}-tg
       Protocol: HTTP
       Port: 80
-      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc" }
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
       ProtocolVersion: HTTP1
       Targets: 
       - Id: !Ref EC2
