@@ -70,10 +70,12 @@
     - 第5回授業課題で使用したポートをあらかじめ解放
     - `# HTTP (ALB)`ではCIDR IPとして`lecture10-alb-sg`を指定
     - その他CIDR IPでは`MyIP`を指定
+
   - RDS
     - `# MYSQL/Aurora`ではCIDR IPとして`lecture10-ec2-sg`を指定
   - ELB (ALB)
     - CIDR IPでは`MyIP`を指定
+
 - IAM Role
   - AmazonS3FullAccess
   - EC2インスタンスにロールを付与できるように設定
@@ -91,22 +93,32 @@
 - EC2
   - `ImageId`は確実に無料利用枠を選択したい為、今回は最新版を取得する記述ではなく直接AMI IDを指定
 
+<br>
+
 - RDS
   - 無料利用枠を使用するために行った設定
     - Multi AZ
       - 第5回授業課題の構成図ではマルチAZ構成にしているが、そもそも無料利用枠ではマルチAZ構成には出来ないため`false`に設定（構成図の作成ミス）
+
     - Storage Type / Allocated Storage（ストレージタイプ / ストレージ割り当て）
       - 最小値にて設定
+
     - Storage Encrypted（暗号化）
       - `t2.micro`では暗号化を使用できない
+
     - Max Allocated Storage（ストレージの自動スケーリング）
       - 数値を指定してしまうと有効になってしまうためそもそも記述をしない
+
   - DB Name（最初のデータベース名）
       - 第4回授業課題でRDSを作成した際、空欄のままにしていたため今回は設定しない
+
   - Master User Name / Master User Password
-      - AWS Secrets Managerを活用することも考えたが、課題でRDSを作成した際は使用していないためNoEcho属性を`true`で指定  
+      - AWS Secrets Managerを活用することも考えたが、課題でRDSを作成した際は使用していないためNoEcho属性を`true`で指定
+  
   - 課題では環境を構築するだけのため、自動バックアップとスナップショットの作成はあえて無効化
   - UpdateReplacePolicy属性も`Delete`に設定
+
+<br>
 
 - ELB (ALB)
   - Resource Type
@@ -116,6 +128,8 @@
     - `Subnets`と`SubnetMappings`を両方指定することはできない
     - 上記の違いは、Elastic IPアドレスの指定ができるかどうか
       - `SubnetMappings`＝Elastic IPアドレスの指定が可能
+
+<br>
 
 - S3
   - 無効化したもの
@@ -130,12 +144,12 @@
 ### スタックの作成
 ***
 - エラーが出た箇所
-  - lecture10-Security.yml
+  - **lecture10-Security.yml**
     - CIDR IP
       - 誤って`!Sub`を使用していた
       - パラメータを入力する際、`/32`が抜けていた
       - `CidrIp`で別のセキュリティーグループを指定していた
-  - lecture10-Application.yml
+  - **lecture10-Application.yml**
     - S3
       - `lecture10-s3-bucket`はすでに存在しているというエラーが出ていたが、確認してもS3のバケットは存在せず、原因が不明だったためバケット名を`lecture10-s3`に変更
 
@@ -185,15 +199,6 @@
 
 - S3
 ![Alt text](images-lecture10/S3.png)
-
-
-<br>
-
-
-### スタックの削除
-***
-- 試しにスタックを削除してみたが、テンプレートに記述していたものすべてが削除されていることを確認できた
-- しかし、スタックを削除してもS3上にはYMLファイルが残っているため注意が必要
 
 
 <br>
