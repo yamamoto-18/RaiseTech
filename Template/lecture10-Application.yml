@@ -1,0 +1,170 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template for Application.
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          Default: Base Name
+        Parameters:
+          - NameBase
+      - Label:
+          Default: Confidential Information
+        Parameters:  
+          - KeyName
+          - RDSUserPassword
+    ParameterLabels:
+      KeyName:
+        Default: Key Pair
+      RDSUserPassword:
+        Default: DB User Password
+
+# Input Parameters
+Parameters:
+  NameBase:
+    Type: String
+    Default: lecture10
+  
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+  
+  RDSUserPassword:
+    NoEcho: true
+    Type: String
+    MinLength: 8
+    MaxLength: 30
+    AllowedPattern: "[a-zA-Z0-9]*"
+
+Resources:
+#  EC2 Definiton
+  EC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-05b37ce701f85f26a
+      KeyName: !Ref KeyName
+      InstanceType: t2.micro
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: "0"
+          SubnetId: { Fn::ImportValue: !Sub "${NameBase}-public-subnet-1" }
+          GroupSet: 
+            - { Fn::ImportValue: !Sub "${NameBase}-ec2-sg" }
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum update -y
+        sudo yum install -y git
+      IamInstanceProfile: { Fn::ImportValue: !Sub "${NameBase}-s3-instance-profile" }
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-ec2
+
+# RDS Definiton
+  SubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupDescription: Subnet Group For MySQL.
+      SubnetIds:  
+        - { Fn::ImportValue: !Sub "${NameBase}-private-subnet-1" }
+        - { Fn::ImportValue: !Sub "${NameBase}-private-subnet-2" }
+      DBSubnetGroupName: !Sub ${NameBase}-rds-subnet-group
+      Tags: 
+        - Key: Name
+          Value: !Sub ${NameBase}-subnet-group
+  
+  RDS:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Sub ${NameBase}-db
+      DBInstanceClass: db.t2.micro
+      DBSubnetGroupName: !Ref SubnetGroup
+      Engine: MySQL
+      EngineVersion: 8.0.33
+      StorageType: gp2
+      AllocatedStorage: 20
+      MasterUsername: admin
+      MasterUserPassword: !Ref RDSUserPassword
+      BackupRetentionPeriod: 0
+      CopyTagsToSnapshot: false
+      DeleteAutomatedBackups: true
+      PubliclyAccessible: false
+      VPCSecurityGroups:
+        - { Fn::ImportValue: !Sub "${NameBase}-rds-sg" }
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-rds
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+# ELB (ALB) Definiton
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      TargetType: instance
+      Name: !Sub ${NameBase}-tg
+      Protocol: HTTP
+      Port: 80
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
+      ProtocolVersion: HTTP1
+      Targets: 
+      - Id: !Ref EC2
+        Port: 80
+      HealthCheckEnabled: true
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: /
+      HealthCheckPort: traffic-port
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 5
+      UnhealthyThresholdCount: 2
+      Matcher: 
+        HttpCode: 200
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-alb-tg
+
+  ALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties: 
+      Name: !Sub ${NameBase}-alb
+      Scheme: internet-facing
+      SecurityGroups:
+        - { Fn::ImportValue: !Sub "${NameBase}-alb-sg" }
+      Subnets: 
+        - { Fn::ImportValue: !Sub "${NameBase}-public-subnet-1" }
+        - { Fn::ImportValue: !Sub "${NameBase}-public-subnet-2" }
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-alb
+
+  ALBListenerHTTP: 
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      Port: 80
+      Protocol: HTTP
+      DefaultActions: 
+        - TargetGroupArn: !Ref TargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref ALB
+
+# S3 Definiton
+  S3:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${NameBase}-s3
+      PublicAccessBlockConfiguration: 
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Suspended
+      BucketEncryption:
+        ServerSideEncryptionConfiguration: 
+          - ServerSideEncryptionByDefault: 
+              SSEAlgorithm: AES256
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced        
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-s3

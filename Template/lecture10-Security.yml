@@ -1,0 +1,138 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template for Security.
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          Default: Base Name
+        Parameters:
+          - NameBase
+      - Label:
+          Default: Confidential Information
+        Parameters:
+          - MyIP
+    ParameterLabels:
+      MyIP:
+        Default: My IP Address
+
+# Input Parameters
+Parameters:
+  NameBase:
+    Type: String
+    Default: lecture10
+  
+  MyIP:
+    Type: String
+
+Resources:
+# EC2 Security Group Definition
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub ${NameBase}-ec2-sg
+      GroupDescription: Security Group For EC2.
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
+      SecurityGroupIngress:
+        # HTTP
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref MyIP
+        # SSH
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref MyIP
+        # Custom TCP
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: !Ref MyIP
+        # HTTP (ALB)
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          SourceSecurityGroupId: !Ref ALBSecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-ec2-sg
+
+# RDS (MySQL) Security Group Definition
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub ${NameBase}-rds-sg
+      GroupDescription: Security Group For RDS.
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
+      SecurityGroupIngress:
+        # MYSQL/Aurora
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          SourceSecurityGroupId: !Ref EC2SecurityGroup
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-rds-sg
+
+# ELB (ALB) Security Group Definition
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub ${NameBase}-alb-sg
+      GroupDescription: Security Group For ALB.
+      VpcId: { Fn::ImportValue: !Sub "${NameBase}-vpc-id" }
+      SecurityGroupIngress:
+        # HTTP
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: !Ref MyIP
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-alb-sg
+
+# IAM Role (AmazonS3FullAccess) Definition
+  S3AccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${NameBase}-s3-access-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement: 
+          - Effect: Allow
+            Principal: 
+              Service: 
+                - ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  S3AccessInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref S3AccessRole
+
+Outputs:
+  EC2SecurityGroup:
+    Value: !Ref EC2SecurityGroup
+    Export:
+      Name: !Sub ${NameBase}-ec2-sg
+
+  RDSSecurityGroup:
+    Value: !Ref RDSSecurityGroup
+    Export:
+      Name: !Sub ${NameBase}-rds-sg
+
+  ALBSecurityGroup:
+    Value: !Ref ALBSecurityGroup
+    Export:
+      Name: !Sub ${NameBase}-alb-sg
+
+  S3AccessInstanceProfile:
+    Value: !Ref S3AccessInstanceProfile
+    Export:
+      Name: !Sub ${NameBase}-s3-instance-profile
