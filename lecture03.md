@@ -12,6 +12,7 @@
 - ブラウザでのアクセスに成功
 
 ![01](images-lecture03/2023-12-04_234104.png)
+
 ![02](images-lecture03/2023-12-04_234132.png)
 
 <br>
@@ -247,13 +248,15 @@ bin/cloud9_dev
 - configフォルダ ⇒ environmentsフォルダ内にある**development.rb**ファイルを開く
 -  Block hostの画面に表示されている文字列をdevelopment.rbファイルの一番下にペーストする
 
-![04](images-lecture03/2023-12-04_234356.png)
+   ![04](images-lecture03/2023-12-04_234356.png)
+
 - `config.hosts <<`も入力しなければ起動しない
 - `end`がきちんと反映されていないと起動しない ⇒ `syntax error`が表示された
 - `bin/cloud9_dev`で再度アプリケーションの起動をする
    - 起動に成功
    - 動作確認も完了
 
+<br>
 <br>
 
 ### APサーバーについて調べる
@@ -270,6 +273,7 @@ bin/cloud9_dev
   ![06](images-lecture03/2023-12-04_235116.png)
 - `rails s`でアプリケーションサーバーを再起動すると再びアクセスが可能
 
+<br>
 <br>
 
 ### DBサーバーについて調べる
@@ -294,7 +298,7 @@ bin/cloud9_dev
 - 再起動をすると`active（running）`になりアクセスが可能になる
  
    ![11](images-lecture03/2023-12-05_000853.png)
-   
+
    ![12](images-lecture03/2023-12-05_001249.png)
 
 <br>
