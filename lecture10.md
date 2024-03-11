@@ -1,6 +1,6 @@
 # 第10回授業課題
 
-## 【課題】
+## 【課題内容】
 - 現在までに作った環境のコード化
   - EC2
   - RDS
@@ -8,18 +8,19 @@
   - S3
 - コード化したものを実行し、環境が自動で構築されることを確認
 
-
 <br>
-
+<br>
 
 ## CloudFormation
 - 課題開始当初、VPC・EC2・RDS…と個別にテンプレートの作成を行おうと思っていたが、スタックを細分化しすぎると他のスタックとの依存関係で修正がしにくくなるという記事を見つけ、最終的にNetwork Layer・Security Layer・Application Layerの3つに分けてテンプレートの作成をすることにした。
 - 第5回授業課題で作成した構成図を元に自動化する。
 
 <br>
+<br>
 
 ![Alt text](images-lecture05/aws_diagram.png)
 
+<br>
 <br>
 
 | № | Template | 記述内容 |
@@ -28,9 +29,8 @@
 | 2. | [Security](Template/lecture10-Security.yml) | Security Group<br>　- EC2<br>　- RDS<br>　- ALB<br>IAM Role<br>　- AmazonS3FullAccess<br> |
 | 3. | [Application](Template/lecture10-Application.yml) | EC2<br>RDS<br>ELB (ALB)<br>S3 |
   
-
 <br>
-
+<br>
 
 ### 1. Network Layer
 ***
@@ -53,17 +53,16 @@
 
 - するとエラーの内容が表示されるようになった。下図では`メタデータ・インターフェースに無効なプロパティ Perameters があります`というコメントが表示され、確認すると`Parameters`の綴りが間違っていることがわかる。
 
-![Alt text](images-lecture10/cfn-lint_error.png)
+  ![Alt text](images-lecture10/cfn-lint_error.png)
 
 - エラーがあればファイル名が赤字になり、エラー個数が表示されるため視覚的にもわかりやすい。
 
-![Alt text](images-lecture10/cfn-lint_errorlist.png)
+  ![Alt text](images-lecture10/cfn-lint_errorlist.png)
 
 - 今回、AvailabilityZoneで直接リージョンの指定をしようと試みたが、`Don't hardcode ap-northeast-1a for AvailabilityZones (AvailabilityZonesにap-northeast-1aをハードコードしないでください)`とcfn-lintのコメントが表示された為、別の方法でリージョンの指定を行った。
 
-
 <br>
-
+<br>
 
 ### 2. Security Layer
 ***
@@ -86,9 +85,8 @@
 
 - 組み込み関数`Fn::Join`の記述が個人的に難しかった。またcfn-lintは、記述方法が間違っているかどうかの判別はつくが、**組み込み関数の内容（スタックを跨いだ紐付け）が正しいかどうかは判別ができない**ため注意が必要。
 
-
 <br>
-
+<br>
 
 ### 3. Application Layer
 ***
@@ -97,7 +95,7 @@
 
 <br>
 
-- RDS（箇条書きでは見にくいため表にて記述）
+- RDS（箇条書きでは見づらいため表にて記述）
 
 | 項目 | 説明 |
 |:---|:---|
@@ -128,9 +126,8 @@
     - バージョニング
     - ACL設定
 
-
 <br>
-
+<br>
 
 ### スタックの作成
 ***
@@ -148,58 +145,67 @@
 
 - 上記の修正を行い、スタックの作成に成功した
 
-![Alt text](images-lecture10/stack.png)
-
+  ![Alt text](images-lecture10/stack.png)
 
 <br>
-
+<br>
 
 ### 作成結果
 ***
 #### Network Layer
 - VPC
-![Alt Text](images-lecture10/VPC.png)
+
+  ![Alt Text](images-lecture10/VPC.png)
 
 <br>
 
 #### Security Layer
 - EC2
-![Alt text](images-lecture10/EC2-sg.png)
+
+  ![Alt text](images-lecture10/EC2-sg.png)
 
 - RDS
-![Alt text](images-lecture10/RDS-sg.png)
+
+  ![Alt text](images-lecture10/RDS-sg.png)
 
 - ALB
-![Alt text](images-lecture10/ALB-sg.png)
+
+  ![Alt text](images-lecture10/ALB-sg.png)
 
 - IAM
-![Alt text](images-lecture10/IAM.png)
+
+  ![Alt text](images-lecture10/IAM.png)
 
 <br>
 
 #### Application Layer
 - EC2
-![Alt text](images-lecture10/EC2.png)
+  
+  ![Alt text](images-lecture10/EC2.png)
 
 - RDS
-![Alt text](images-lecture10/RDS.png)
+
+  ![Alt text](images-lecture10/RDS.png)
 
 - ALB
-![Alt text](images-lecture10/ALB.png)
-![Alt text](images-lecture10/ALB-tg.png)
+
+  ![Alt text](images-lecture10/ALB.png)
+  ![Alt text](images-lecture10/ALB-tg.png)
 
 - S3
-![Alt text](images-lecture10/S3.png)
 
+  ![Alt text](images-lecture10/S3.png)
 
 <br>
-
+<br>
 
 ***
-〈参考サイト〉　★ ＝ AWS公式サイト
+〈参考サイト〉
+- **AWS公式ドキュメント**
+  - [AWS CloudFormation VPC テンプレート](https://docs.aws.amazon.com/ja_jp/codebuild/latest/userguide/cloudformation-vpc-template.html) 
+  - [テンプレートリファレンス](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-reference.html) 
+
 - **Network**
-  - [AWS CloudFormation VPC テンプレート](https://docs.aws.amazon.com/ja_jp/codebuild/latest/userguide/cloudformation-vpc-template.html) ★
-  - [テンプレートリファレンス](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/template-reference.html) ★
   - [【AWS】CloudFormationをご紹介！](https://smallit.co.jp/blog/a1180/)
   - [【初心者向け】AWS CloudFormation で VPC を構築する](https://staff-blog.faith-sol-tech.com/%E3%80%90%E5%88%9D%E5%BF%83%E8%80%85%E5%90%91%E3%81%91%E3%80%91aws-cloudformation-%E3%81%A7-vpc-%E3%82%92%E6%A7%8B%E7%AF%89%E3%81%99%E3%82%8B/#toc5)
   - [CloudFormationを使ってVPCを構築する](https://qiita.com/okubot55/items/b18a5dd5166f1ec2696c)

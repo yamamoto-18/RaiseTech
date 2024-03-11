@@ -1,6 +1,6 @@
 # 第5回授業課題
 
-## 【課題】
+## 【課題内容】
 - EC2上にサンプルアプリケーションをデプロイ　**〈組み込みサーバー〉**
 - 個別サーバーでのデプロイ　**〈Webサーバー：Nginx〉**　**〈APサーバー：Unicorn〉**
 - ELB（ALB）の追加
@@ -8,17 +8,17 @@
 - AWS構成図の作成
 
 <br>
+<br>
 
 ### EC2上にサンプルアプリケーションをデプロイする
 ***
 #### 1. EC2へのSSH接続は下記サイトを参考に行った
-   - [VScodeからEC2へSSH接続](https://kyrieee.com/vscode-ec2-ssh/2121/)
-   - [windows環境の「visual studio code」から「Remote SSH」でサーバーにつなぐためのtips](https://note.com/existy/n/n2c1ba091f02a)
+- [VScodeからEC2へSSH接続](https://kyrieee.com/vscode-ec2-ssh/2121/)
+- [windows環境の「visual studio code」から「Remote SSH」でサーバーにつなぐためのtips](https://note.com/existy/n/n2c1ba091f02a)
+- 「**Identityファイルをユーザードキュメント配下に置く**」という言葉の意味がわからず苦戦したが、接続に成功
 
-- 「**Identityファイルをユーザードキュメント配下に置く**」という言葉の意味がわからず、苦戦したが接続に成功
-
-![Alt text](images-lecture05/SSH-1.png)
-![Alt text](images-lecture05/SSH-2.png)
+  ![Alt text](images-lecture05/SSH-1.png)
+  ![Alt text](images-lecture05/SSH-2.png)
 
 <br>
 
@@ -156,11 +156,11 @@ exit
 
 - MySQLの起動を確認
 
-![Alt text](images-lecture05/MySQL_start.png)
+  ![Alt text](images-lecture05/MySQL_start.png)
 
 - `show databases;`でデータベースの存在が確認できる
 
-![Alt text](images-lecture05/MySQL.png)
+  ![Alt text](images-lecture05/MySQL.png)
 
 <br>
 
@@ -176,7 +176,7 @@ sudo service mysqld stop
 
 <br>
 
-- インストールしたものに問題があったのか、VScodeがフリーズして作業がまったく進まない為、EC2を作成し、併せてコマンドの見直しも行ったところ、無事に必要なもののインストールが完了した
+- インストールしたものに問題があったのか、VScodeがフリーズして作業がまったく進まない為、EC2を再度作成し、併せてコマンドの見直しも行ったところ、無事に必要なもののインストールが完了した
 - 2つ目のEC2ではサンプルアプリケーションのデプロイが成功したが、MySQLを第3回授業課題で使用したコマンドでインストールしてしまった
 - 除去方法がわからなかった為、再度EC2を作成し直した
 - 3つ目のEC2では何故か下記画面が表示され、アプリケーションがデプロイ出来なかったため、「[rails6 「ActionView::Template::Error (The asset “application.css” is not present in the asset pipeline」の対処法](https://mebee.info/2021/01/19/post-27981/)」を参考にしたところ、無事デプロイに成功した
@@ -197,13 +197,16 @@ rails assets:precompile
 
 ※デフォルトでは「config.assets.compile = false」となっている
 
+<br>
 
 ### ③ デプロイに成功
 ![Alt text](images-lecture05/kumikomi_deploy-1.png)
+
 ![Alt text](images-lecture05/kumikomi_deploy-2.png)
 
 - 現状は`development.rb`の為、➁は関係ない気がする
 
+<br>
 <br>
 
 ### 個別サーバーでのデプロイ　〈Webサーバー：Nginx〉　〈APサーバー：Unicorn〉
@@ -217,6 +220,8 @@ rails assets:precompile
 - [【vim】スワップファイル（.swp）について - 出さなくする/出力場所を設定する](https://www.tweeeety.blog/entry/2017/01/25/001208)
 - [デプロイ方法⑤(Nginx/Unicorn)](https://qiita.com/maru1124_/items/88febc8ba50014056a34)
 - [AWS EC2で立ち上げたRails（unicorn）サーバーのログ確認方法](https://qiita.com/jibiking/items/116b765d39c06da83970)
+
+<br>
 
 #### 1. Nginx（エンジンエックス）
 
@@ -236,9 +241,12 @@ sudo systemctl status nginx
 
 - Nginxにアクセスしてみる
   - EC2セキュリティーグループのインバウンドルールを追加
-  ![Alt text](images-lecture05/sg.png)
+    
+    ![Alt text](images-lecture05/sg.png)
+
   - `http://EC2パブリックIPv4/`でブラウザからアクセス
- ![Alt text](images-lecture05/Nginx.png)
+    
+    ![Alt text](images-lecture05/Nginx.png)
 
 ```sh
 # Nginxの自動起動設定
@@ -403,7 +411,6 @@ kill <確認したunicorn rails masterのPID（下図では10683）>
 
 #### 4. エラーの対処
 ***
-
 〈参考サイト〉
 - [グローバルIPをcurlで確認](https://qiita.com/kanpou0108/items/734b947f5a95109e7bb9)
 - [Nginxの導入でエラーが出たので、解決した。](https://qiita.com/naomit/items/b57e6ca1e2d45195817d)
@@ -412,48 +419,47 @@ kill <確認したunicorn rails masterのPID（下図では10683）>
 - [curlコマンドの使い方(HTTPリクエスト)](https://www.wakuwakubank.com/posts/800-linux-network-curl/)
 - [curlでunix domain socket経由アクセスする](https://qiita.com/toritori0318/items/193df8f749a9c4bda883)
 - [aws nginx + unicorn (13:permission dnined) while connecting to upstream でハマッた時に試したことのTIPS](https://qiita.com/UltraBirdTech/items/4f1a4a490cfc19298ad0)
-
 ***
 
+<br>
 
 - `curl http://EC2パブリックIPv4アドレス/`でNginxの初期画面がブラウザ上で表示されており、サンプルアプリケーションが機能していないことがわかった為、Unicornのログ確認を試みた
 
-![Alt text](images-lecture05/log-1.png)
+  ![Alt text](images-lecture05/log-1.png)
 
 - 原因を探る過程で、セキュリティーグループのソースに誤りがあったために訂正をした。自分以外もアクセスできるようになっていた為、エラーログに他の通信ログも反映されていた
 - ソース`0.0.0.0/0`は「すべての通信」ということになり、ポートを全開放しているわけではないが、他人でもアクセスが出来るようになってしまう
 
-![Alt text](images-lecture05/sg-new.png)
+  ![Alt text](images-lecture05/sg-new.png)
 
 - ソース訂正後、VScodeから`curl http://EC2パブリックIPv4アドレス/`ではHTML等表示されなくなった
 - `curl -v http://EC2パブリックIPv4アドレス/`でサーバーとのやり取りを表示させたが、接続さえできていない
 
-![Alt text](images-lecture05/access_error.png)
+  ![Alt text](images-lecture05/access_error.png)
 
 - Nginxのconfigファイルの設定が正しいか不安だった為見直しも行った
 - 「escキー→:wqエンターキーで保存」が完了するようだが、「:wq入力→escキー」としていた為、正しく反映されていなかった可能性がある
 - また、誤って不要なconfigファイルを作成していた為削除を行った
 - configファイル訂正後、エラーログで表示されていた`usr/share/nginx/html/favicon.ico`は表示されなくなったが、それでもブラウザが正しく表示されない
 
-![Alt text](images-lecture05/error_log.png)
+  ![Alt text](images-lecture05/error_log.png)
 
 - unix domain socket経由で通信を試みた
 - 下記を見たところ、Unicornから応答はあるため問題はNginxとUnicorn間であることが判明
 
-![Alt text](images-lecture05/unix.png)
+  ![Alt text](images-lecture05/unix.png)
 
 - 上記コマンドはcurlバージョン7.40以上でないと使用できないとのことだが、確認したところバージョンは問題なかった
 
-![Alt text](images-lecture05/curl.png)
+  ![Alt text](images-lecture05/curl.png)
 
 <br>
 
 ***
-
 - 解決が難しかったため、リアルタイム授業（2024年1月6日　第1回）で講師の方に確認して頂き、アドバイスを頂いた
 
-![Alt text](images-lecture05/teach.png)
-![Alt text](images-lecture05/conf.png)
+  ![Alt text](images-lecture05/teach.png)
+  ![Alt text](images-lecture05/conf.png)
 
 1. `sudo vi /etc/nginx/nginx.conf`で`nginx.conf`ファイルを開こうとしたところ、`.nginx.conf.swp`ファイルの影響で開くことができなかった為、`sudo rm /etc/nginx/.nginx.conf.swp`で削除を行った
 2. `nginx.conf`ファイル内の編集を行った
@@ -465,7 +471,7 @@ kill <確認したunicorn rails masterのPID（下図では10683）>
 
 - 以上の変更により、下記ステータスコードが表示されるようになった
 
-![Alt text](images-lecture05/502.png)
+  ![Alt text](images-lecture05/502.png)
 
 - 通常、configファイル内に`include /etc/nginx/conf.d/*.conf;`の記述はあるはずだが、Nginxのインストール方法が異なったのか、記述がなかったことも「Welcome to Nginx!」が表示される要因のひとつらしい
 - エラーログの確認により、**ユニックスのソケットファイルに対しての読み取り権限がない**ことと、**500.htmlのアクセス権限がない**ことがステータスコード502の原因であることが判明
@@ -485,26 +491,27 @@ kill <確認したunicorn rails masterのPID（下図では10683）>
 - しかしエラーログの内容に変化が見られなかった為、NginxとUnicorn、それぞれを立ち上げているユーザーを確認したところ、Nginxのユーザーが他と異なることがわかった
 - 立ち上げているユーザーが一致していなければ、Permission deniedで弾かれることがあるらしい
 
-![Alt text](images-lecture05/usr_chack.png)
+  ![Alt text](images-lecture05/usr_chack.png)
 
 - `sudo vi /etc/nginx/nginx.conf`コマンドでファイルを開き、`#user nobody;`の下に追記
 
-![Alt text](images-lecture05/nginx.conf.png)
+  ![Alt text](images-lecture05/nginx.conf.png)
 
 - Nginxを立ち上げるユーザーをUnicornと一致させた
 
-![Alt text](images-lecture05/usr_nginx.png)
+  ![Alt text](images-lecture05/usr_nginx.png)
 
 - するとエラーログが`Permission denied`から`No such file or directory`に変わった
 
-![Alt text](images-lecture05/No_such_file_or_directory.png)
+  ![Alt text](images-lecture05/No_such_file_or_directory.png)
 
 - さらにエラーの原因を調べたところ、とても初歩的なミスをしていることが判明した
 - `sudo vi /etc/nginx/conf.d/rails.conf`の設定だが、`raisetech-live8-sample-app`がすべて`raisetech_live8_sample_app`となっていた（ハイフンがアンダーバーに）
 - こちらを訂正し、再度Nginxをリスタートさせたところ、無事アプリケーション画面がブラウザ上に表示された
 
-![Alt text](images-lecture05/nginx_unicorn.png)
+  ![Alt text](images-lecture05/nginx_unicorn.png)
 
+<br>
 <br>
 
 ### ELB（ALB）の追加
@@ -518,6 +525,8 @@ kill <確認したunicorn rails masterのPID（下図では10683）>
 - [ALBのヘルスチェックが失敗する時の対応方法と解決策](https://cloud5.jp/alb%EF%BD%B0unhealthy/)
 - [ALBのヘルスチェックに失敗するときに確認すること](https://akng-engineer.hatenablog.com/entry/2020/05/17/000706)
 
+<br>
+
 #### 1. ターゲットグループの作成
 - 基本的な設定：インスタンス
 - VPC：サンプルアプリケーションが入っているものを選択
@@ -526,19 +535,21 @@ kill <確認したunicorn rails masterのPID（下図では10683）>
 - ヘルスチェックパス：/
 - ターゲットの登録：アプリケーションが入っているEC2を選択
 
+<br>
+
 #### 2. ロードバランサーの作成
 - セキュリティーグループを新規作成
 - ソースはマイIPアドレスを指定
 
-![Alt text](images-lecture05/alb-sg.png)
+  ![Alt text](images-lecture05/alb-sg.png)
 
 - ネットワークマッピングは下図の通り
 
-![Alt text](images-lecture05/network-mapping.png)
+  ![Alt text](images-lecture05/network-mapping.png)
 
 - 作成したロードバランサー
 
-![Alt text](images-lecture05/alb.png)
+  ![Alt text](images-lecture05/alb.png)
 
 - `development.rb`に以下を追記
 ```sh
@@ -548,17 +559,21 @@ config.hosts << "ALBのDNS名"
 - ターゲットグループのヘルスチェックも`unhealthy`となっている
 - パブリックIPアドレスではアプリケーション画面が表示されたため、NginxとUnicornは問題がなさそう
 
-![Alt text](images-lecture05/504error.png)
-![Alt text](images-lecture05/tg-unhealthy.png)
+  ![Alt text](images-lecture05/504error.png)
+
+  ![Alt text](images-lecture05/tg-unhealthy.png)
 
 - 解決方法を調べ、EC2のセキュリティーグループにALBのセキュリティーグループを追加した
 - 再度NginxとUnicornの再起動を行い、DNS名でアクセスしたところ、無事アプリケーション画面が表示された
 - ヘルスチェックも`Healthy`になった
 
-![Alt text](images-lecture05/ec2-sg.png)
-![Alt text](images-lecture05/dns_access.png)
-![Alt text](images-lecture05/tg-healthy.png)
+  ![Alt text](images-lecture05/ec2-sg.png)
 
+  ![Alt text](images-lecture05/dns_access.png)
+
+  ![Alt text](images-lecture05/tg-healthy.png)
+
+<br>
 <br>
 
 ### S3の追加
@@ -567,40 +582,48 @@ config.hosts << "ALBのDNS名"
 - [[Rails]Active Storageの画像をAWS S3へ保存する](https://zenn.dev/redheadchloe/articles/e924ab767b40d5)
 - [AWS S3に対してデータをアップロードするためのWebページをAWS EC2上に作成する](https://qiita.com/ohtsuka-shota/items/cdb365fe164fbc48b528)
 
-#### 1. IAMロールの作成
+<br>
 
+#### 1. IAMロールの作成
 ![Alt text](images-lecture05/iam-role.png)
 
-#### 2. S3バケットの作成
+<br>
 
+#### 2. S3バケットの作成
 ![Alt text](images-lecture05/s3.png)
 
-#### 3. EC2にIAMロールを追加
+<br>
 
+#### 3. EC2にIAMロールを追加
 ![Alt text](images-lecture05/EC2_role.png)
 
-#### 4. Gemfileの確認
+<br>
 
+#### 4. Gemfileの確認
 - `aws-sdk-s3`が記述されていることを確認
 
-![Alt text](images-lecture05/gemfile.png)
+  ![Alt text](images-lecture05/gemfile.png)
+
+<br>
 
 #### 5. development.rbの確認
-
 - `local`部分を`amazon`に変更
 - S3実装を試みた当初は誤って`production.rb`を見ていた為、S3にデータが保存されず困惑した（production.rbは最初から`amazon`となっている）
 
-![Alt text](images-lecture05/config.active_storage.service.png)
+  ![Alt text](images-lecture05/config.active_storage.service.png)
+
+<br>
 
 #### 6. storage.yamlの編集
-
 - `bucket`をS3のバケット名に変更
 
-![Alt text](images-lecture05/storage.yml.png)
+  ![Alt text](images-lecture05/storage.yml.png)
+
+<br>
 
 #### 7. 画像をアップロード
-
 ![Alt text](images-lecture05/orange-1.png)
+
 ![Alt text](images-lecture05/orange-2.png)
 
 - 画像を1枚アップロードすると、サイズ違いで3枚の画像がS3に保存された
@@ -611,6 +634,7 @@ config.hosts << "ALBのDNS名"
 
 ![Alt text](images-lecture05/orange-3.png)
 
+<br>
 <br>
 
 ### AWS構成図の作成
