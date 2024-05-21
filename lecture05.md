@@ -212,10 +212,10 @@ rails assets:precompile
 ### 個別サーバーでのデプロイ　〈Webサーバー：Nginx〉　〈APサーバー：Unicorn〉
 ***
 〈参考サイト〉
-- [Rails】 AWSのEC2にデプロイする方法~画像で丁寧に解説！](https://pikawaka.com/rails/ec2_deploy)
+- [【Rails】 AWSのEC2にデプロイする方法~画像で丁寧に解説！](https://pikawaka.com/rails/ec2_deploy)
 - [AWS(EC2)でNginxのrails.confを設定する方法](https://qiita.com/gyu_outputs/items/f816ade3eaaf68ee7f66)
 - [【CentOS 7】Nginx + Unicorn で Rails アプリケーションを本番環境で立ち上げる方法](https://zenn.dev/noraworld/articles/deploy-rails-application-with-nginx-and-unicorn)
-- [Rails】 AWS Rails 6 + MySQL + Nginx な環境の作成方法 サーバー編](https://takelg.com/aws_create_rails_development_server/)
+- [【Rails】 AWS Rails 6 + MySQL + Nginx な環境の作成方法 サーバー編](https://takelg.com/aws_create_rails_development_server/)
 - [Nginx , Unicorn , Ruby on Rails 環境での502エラー忘備録](https://zenn.dev/chikaniki2/articles/8121a3e2110ad5)
 - [【vim】スワップファイル（.swp）について - 出さなくする/出力場所を設定する](https://www.tweeeety.blog/entry/2017/01/25/001208)
 - [デプロイ方法⑤(Nginx/Unicorn)](https://qiita.com/maru1124_/items/88febc8ba50014056a34)
